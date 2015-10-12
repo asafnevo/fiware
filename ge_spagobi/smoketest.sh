@@ -3,8 +3,8 @@
 set -e
 
 # Get container id
-container=($(docker ps | awk '{ print $1 }'))
-container_id=${container[1]}
+container_id=$(docker ps | grep "spagobilabs/spagobi:all-in-one" | awk '{print $1}')
+echo "Container id found : $container_id \n"
 
 # Get IP depending on the OS : IP of the VM on Mac OS, IP of the container on others
 if [[ `uname` == 'Darwin'* ]]; then
