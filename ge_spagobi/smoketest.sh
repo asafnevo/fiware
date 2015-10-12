@@ -1,15 +1,20 @@
-#!/usr/bin/env bash
+#!/bin/bash
+
 set -e
 
-container=spagobi
+# Get container id
+container_id=$(docker ps | grep "spagobilabs/spagobi:all-in-one" | awk '{print $1}')
+
+# Get IP depending on the OS : IP of the VM on Mac OS, IP of the container on others
 
 if [[ `uname` == 'Darwin'* ]]; then
-	IP=$(docker-machine ip dev)
+	IP=$(docker-machine ip $(docker-machine active))
 else
-	IP=$(docker inspect --format '{{.NetworkSettings.IPAddress}}' ${container})
+	IP=$(docker inspect --format '{{.NetworkSettings.IPAddress}}' ${container_id})
 fi
 
-port_container=$(docker port $container)
+port_container=$(docker port $container_id)
+echo $port_container
 
 IFS=':' read -a array <<< "$port_container"
 port=$(echo ${array[1]})
